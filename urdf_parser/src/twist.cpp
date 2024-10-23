@@ -40,7 +40,6 @@
 #include <sstream>
 #include <algorithm>
 #include <tinyxml2.h>
-#include <console_bridge/console.h>
 
 namespace urdf{
 
@@ -57,7 +56,6 @@ bool parseTwist(Twist &twist, tinyxml2::XMLElement* xml)
       }
       catch (ParseError &e) {
         twist.linear.clear();
-        CONSOLE_BRIDGE_logError("Malformed linear string [%s]: %s", linear_char, e.what());
         return false;
       }
     }
@@ -70,7 +68,6 @@ bool parseTwist(Twist &twist, tinyxml2::XMLElement* xml)
       }
       catch (ParseError &e) {
         twist.angular.clear();
-        CONSOLE_BRIDGE_logError("Malformed angular [%s]: %s", angular_char, e.what());
         return false;
       }
     }

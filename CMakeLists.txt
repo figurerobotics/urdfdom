@@ -49,8 +49,6 @@ find_package(tinyxml2_vendor QUIET)
 find_package(TinyXML2 REQUIRED)
 
 find_package(urdfdom_headers 1.0 REQUIRED)
-find_package(console_bridge_vendor QUIET) # Provides console_bridge 0.4.0 on platforms without it.
-find_package(console_bridge REQUIRED)
 
 # Control where libraries and executables are placed during the build
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}")

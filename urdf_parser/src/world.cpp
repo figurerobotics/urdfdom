@@ -42,7 +42,6 @@
 #include <sstream>
 #include <algorithm>
 #include <tinyxml2.h>
-#include <console_bridge/console.h>
 
 namespace urdf{
 

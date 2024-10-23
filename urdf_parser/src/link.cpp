@@ -46,7 +46,6 @@
 #include <vector>
 #include <algorithm>
 #include <tinyxml2.h>
-#include <console_bridge/console.h>
 
 #include "./pose.hpp"
 
@@ -61,7 +60,6 @@ bool parseMaterial(Material &material, tinyxml2::XMLElement *config, bool only_n
 
   if (!config->Attribute("name"))
   {
-    CONSOLE_BRIDGE_logError("Material must contain a name attribute");
     return false;
   }
 
@@ -90,7 +88,6 @@ bool parseMaterial(Material &material, tinyxml2::XMLElement *config, bool only_n
       }
       catch (ParseError &e) {
         material.color.clear();
-        CONSOLE_BRIDGE_logError(std::string("Material [" + material.name + "] has malformed color rgba values: " + e.what()).c_str());
       }
     }
   }
@@ -98,8 +95,6 @@ bool parseMaterial(Material &material, tinyxml2::XMLElement *config, bool only_n
   if (!has_rgb && !has_filename) {
     if (!only_name_is_ok) // no need for an error if only name is ok
     {
-      CONSOLE_BRIDGE_logError(std::string("Material ["+material.name+"] color has no rgba").c_str());
-      CONSOLE_BRIDGE_logError(std::string("Material ["+material.name+"] not defined in file").c_str());
     }
     return false;
   }
@@ -114,7 +109,6 @@ bool parseSphere(Sphere &s, tinyxml2::XMLElement *c)
   s.type = Geometry::SPHERE;
   if (!c->Attribute("radius"))
   {
-    CONSOLE_BRIDGE_logError("Sphere shape must have a radius attribute");
     return false;
   }
 
@@ -123,7 +117,6 @@ bool parseSphere(Sphere &s, tinyxml2::XMLElement *c)
   } catch(std::runtime_error &) {
     std::stringstream stm;
     stm << "radius [" << c->Attribute("radius") << "] is not a valid float";
-    CONSOLE_BRIDGE_logError(stm.str().c_str());
     return false;
   }
 
@@ -137,7 +130,6 @@ bool parseBox(Box &b, tinyxml2::XMLElement *c)
   b.type = Geometry::BOX;
   if (!c->Attribute("size"))
   {
-    CONSOLE_BRIDGE_logError("Box shape has no size attribute");
     return false;
   }
   try
@@ -147,7 +139,6 @@ bool parseBox(Box &b, tinyxml2::XMLElement *c)
   catch (ParseError &e)
   {
     b.dim.clear();
-    CONSOLE_BRIDGE_logError(e.what());
     return false;
   }
   return true;
@@ -161,7 +152,6 @@ bool parseCylinder(Cylinder &y, tinyxml2::XMLElement *c)
   if (!c->Attribute("length") ||
       !c->Attribute("radius"))
   {
-    CONSOLE_BRIDGE_logError("Cylinder shape must have both length and radius attributes");
     return false;
   }
 
@@ -170,7 +160,6 @@ bool parseCylinder(Cylinder &y, tinyxml2::XMLElement *c)
   } catch(std::runtime_error &) {
     std::stringstream stm;
     stm << "length [" << c->Attribute("length") << "] is not a valid float";
-    CONSOLE_BRIDGE_logError(stm.str().c_str());
     return false;
   }
 
@@ -179,7 +168,6 @@ bool parseCylinder(Cylinder &y, tinyxml2::XMLElement *c)
   } catch(std::runtime_error &) {
     std::stringstream stm;
     stm << "radius [" << c->Attribute("radius") << "] is not a valid float";
-    CONSOLE_BRIDGE_logError(stm.str().c_str());
     return false;
   }
 
@@ -193,7 +181,6 @@ bool parseMesh(Mesh &m, tinyxml2::XMLElement *c)
 
   m.type = Geometry::MESH;
   if (!c->Attribute("filename")) {
-    CONSOLE_BRIDGE_logError("Mesh must contain a filename attribute");
     return false;
   }
 
@@ -205,7 +192,6 @@ bool parseMesh(Mesh &m, tinyxml2::XMLElement *c)
     }
     catch (ParseError &e) {
       m.scale.clear();
-      CONSOLE_BRIDGE_logError("Mesh scale was specified, but could not be parsed: %s", e.what());
       return false;
     }
   }
@@ -224,7 +210,6 @@ GeometrySharedPtr parseGeometry(tinyxml2::XMLElement *g)
   tinyxml2::XMLElement *shape = g->FirstChildElement();
   if (!shape)
   {
-    CONSOLE_BRIDGE_logError("Geometry tag contains no child element.");
     return geom;
   }
 
@@ -259,7 +244,6 @@ GeometrySharedPtr parseGeometry(tinyxml2::XMLElement *g)
   }
   else
   {
-    CONSOLE_BRIDGE_logError("Unknown geometry type '%s'", type_name.c_str());
     return geom;
   }
 
@@ -281,12 +265,10 @@ bool parseInertial(Inertial &i, tinyxml2::XMLElement *config)
   tinyxml2::XMLElement *mass_xml = config->FirstChildElement("mass");
   if (!mass_xml)
   {
-    CONSOLE_BRIDGE_logError("Inertial element must have a mass element");
     return false;
   }
   if (!mass_xml->Attribute("value"))
   {
-    CONSOLE_BRIDGE_logError("Inertial: mass element must have value attribute");
     return false;
   }
 
@@ -296,14 +278,12 @@ bool parseInertial(Inertial &i, tinyxml2::XMLElement *config)
     std::stringstream stm;
     stm << "Inertial: mass [" << mass_xml->Attribute("value")
         << "] is not a float";
-    CONSOLE_BRIDGE_logError(stm.str().c_str());
     return false;
   }
 
   tinyxml2::XMLElement *inertia_xml = config->FirstChildElement("inertia");
   if (!inertia_xml)
   {
-    CONSOLE_BRIDGE_logError("Inertial element must have inertia element");
     return false;
   }
 
@@ -322,7 +302,6 @@ bool parseInertial(Inertial &i, tinyxml2::XMLElement *config)
     {
       std::stringstream stm;
       stm << "Inertial: inertia element missing " << attr.first << " attribute";
-      CONSOLE_BRIDGE_logError(stm.str().c_str());
       return false;
     }
 
@@ -331,7 +310,6 @@ bool parseInertial(Inertial &i, tinyxml2::XMLElement *config)
     } catch(std::runtime_error &) {
       std::stringstream stm;
       stm << "Inertial: inertia element " << attr.first << " is not a valid double";
-      CONSOLE_BRIDGE_logError(stm.str().c_str());
       return false;
     }
   }
@@ -372,7 +350,6 @@ bool parseVisual(Visual &vis, tinyxml2::XMLElement *config)
   if (mat) {
     // get material name
     if (!mat->Attribute("name")) {
-      CONSOLE_BRIDGE_logError("Visual material must contain a name attribute");
       return false;
     }
     vis.material_name = mat->Attribute("name");
@@ -420,7 +397,6 @@ bool parseLink(Link &link, tinyxml2::XMLElement* config)
   const char *name_char = config->Attribute("name");
   if (!name_char)
   {
-    CONSOLE_BRIDGE_logError("No name given for the link.");
     return false;
   }
   link.name = std::string(name_char);
@@ -432,7 +408,6 @@ bool parseLink(Link &link, tinyxml2::XMLElement* config)
     link.inertial.reset(new Inertial());
     if (!parseInertial(*link.inertial, i))
     {
-      CONSOLE_BRIDGE_logError("Could not parse inertial element for Link [%s]", link.name.c_str());
       return false;
     }
   }
@@ -450,7 +425,6 @@ bool parseLink(Link &link, tinyxml2::XMLElement* config)
     else
     {
       vis.reset();
-      CONSOLE_BRIDGE_logError("Could not parse visual element for Link [%s]", link.name.c_str());
       return false;
     }
   }
@@ -472,7 +446,6 @@ bool parseLink(Link &link, tinyxml2::XMLElement* config)
     else
     {
       col.reset();
-      CONSOLE_BRIDGE_logError("Could not parse collision element for Link [%s]",  link.name.c_str());
       return false;
     }
   }
@@ -565,7 +538,6 @@ bool exportGeometry(GeometrySharedPtr &geom, tinyxml2::XMLElement *xml)
   }
   else
   {
-    CONSOLE_BRIDGE_logError("geometry not specified, I'll make one up for you!");
     Sphere *s = new Sphere();
     s->radius = 0.03;
     geom.reset(s);

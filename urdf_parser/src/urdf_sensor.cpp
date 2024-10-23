@@ -43,7 +43,6 @@
 #include <string>
 #include <algorithm>
 #include <tinyxml2.h>
-#include <console_bridge/console.h>
 
 #include <urdf_parser/urdf_parser.h>
 
@@ -68,18 +67,15 @@ bool parseCameraInternal(Camera &camera, tinyxml2::XMLElement* config)
       }
       catch (std::invalid_argument &e)
       {
-        CONSOLE_BRIDGE_logError("Camera image width [%s] is not a valid int: %s", width_char, e.what());
         return false;
       }
       catch (std::out_of_range &e)
       {
-        CONSOLE_BRIDGE_logError("Camera image width [%s] is out of range: %s", width_char, e.what());
         return false;
       }
     }
     else
     {
-      CONSOLE_BRIDGE_logError("Camera sensor needs an image width attribute");
       return false;
     }
 
@@ -92,18 +88,15 @@ bool parseCameraInternal(Camera &camera, tinyxml2::XMLElement* config)
       }
       catch (std::invalid_argument &e)
       {
-        CONSOLE_BRIDGE_logError("Camera image height [%s] is not a valid int: %s", height_char, e.what());
         return false;
       }
       catch (std::out_of_range &e)
       {
-        CONSOLE_BRIDGE_logError("Camera image height [%s] is out of range: %s", height_char, e.what());
         return false;
       }
     }
     else
     {
-      CONSOLE_BRIDGE_logError("Camera sensor needs an image height attribute");
       return false;
     }
 
@@ -112,7 +105,6 @@ bool parseCameraInternal(Camera &camera, tinyxml2::XMLElement* config)
       camera.format = std::string(format_char);
     else
     {
-      CONSOLE_BRIDGE_logError("Camera sensor needs an image format attribute");
       return false;
     }
 
@@ -122,13 +114,11 @@ bool parseCameraInternal(Camera &camera, tinyxml2::XMLElement* config)
       try {
         camera.hfov = strToDouble(hfov_char);
       } catch(std::runtime_error &) {
-        CONSOLE_BRIDGE_logError("Camera image hfov [%s] is not a valid float", hfov_char);
         return false;
       }
     }
     else
     {
-      CONSOLE_BRIDGE_logError("Camera sensor needs an image hfov attribute");
       return false;
     }
 
@@ -138,13 +128,11 @@ bool parseCameraInternal(Camera &camera, tinyxml2::XMLElement* config)
       try {
         camera.near = strToDouble(near_char);
       } catch(std::runtime_error &) {
-        CONSOLE_BRIDGE_logError("Camera image near [%s] is not a valid float", near_char);
         return false;
       }
     }
     else
     {
-      CONSOLE_BRIDGE_logError("Camera sensor needs an image near attribute");
       return false;
     }
 
@@ -154,20 +142,17 @@ bool parseCameraInternal(Camera &camera, tinyxml2::XMLElement* config)
       try {
         camera.far = strToDouble(far_char);
       } catch(std::runtime_error &) {
-        CONSOLE_BRIDGE_logError("Camera image far [%s] is not a valid float", far_char);
         return false;
       }
     }
     else
     {
-      CONSOLE_BRIDGE_logError("Camera sensor needs an image far attribute");
       return false;
     }
 
   }
   else
   {
-    CONSOLE_BRIDGE_logError("Camera sensor has no <image> element");
     return false;
   }
   return true;
@@ -195,12 +180,10 @@ bool parseRayInternal(Ray &ray, tinyxml2::XMLElement* config)
       }
       catch (std::invalid_argument &e)
       {
-        CONSOLE_BRIDGE_logError("Ray horizontal samples [%s] is not a valid float: %s", samples_char, e.what());
         return false;
       }
       catch (std::out_of_range &e)
       {
-        CONSOLE_BRIDGE_logError("Ray horizontal samples [%s] is out of range: %s", samples_char, e.what());
         return false;
       }
     }
@@ -211,7 +194,6 @@ bool parseRayInternal(Ray &ray, tinyxml2::XMLElement* config)
       try {
         ray.horizontal_resolution = strToDouble(resolution_char);
       } catch(std::runtime_error &) {
-        CONSOLE_BRIDGE_logError("Ray horizontal resolution [%s] is not a valid float", resolution_char);
         return false;
       }
     }
@@ -222,7 +204,6 @@ bool parseRayInternal(Ray &ray, tinyxml2::XMLElement* config)
       try {
         ray.horizontal_min_angle = strToDouble(min_angle_char);
       } catch(std::runtime_error &) {
-        CONSOLE_BRIDGE_logError("Ray horizontal min_angle [%s] is not a valid float", min_angle_char);
         return false;
       }
     }
@@ -233,7 +214,6 @@ bool parseRayInternal(Ray &ray, tinyxml2::XMLElement* config)
       try {
         ray.horizontal_max_angle = strToDouble(max_angle_char);
       } catch(std::runtime_error &) {
-        CONSOLE_BRIDGE_logError("Ray horizontal max_angle [%s] is not a valid float", max_angle_char);
         return false;
       }
     }
@@ -251,12 +231,10 @@ bool parseRayInternal(Ray &ray, tinyxml2::XMLElement* config)
       }
       catch (std::invalid_argument &e)
       {
-        CONSOLE_BRIDGE_logError("Ray vertical samples [%s] is not a valid float: %s", samples_char, e.what());
         return false;
       }
       catch (std::out_of_range &e)
       {
-        CONSOLE_BRIDGE_logError("Ray vertical samples [%s] is out of range: %s", samples_char, e.what());
         return false;
       }
     }
@@ -267,7 +245,6 @@ bool parseRayInternal(Ray &ray, tinyxml2::XMLElement* config)
       try {
         ray.vertical_resolution = strToDouble(resolution_char);
       } catch(std::runtime_error &) {
-        CONSOLE_BRIDGE_logError("Ray vertical resolution [%s] is not a valid float", resolution_char);
         return false;
       }
     }
@@ -278,7 +255,6 @@ bool parseRayInternal(Ray &ray, tinyxml2::XMLElement* config)
       try {
         ray.vertical_min_angle = strToDouble(min_angle_char);
       } catch(std::runtime_error &) {
-        CONSOLE_BRIDGE_logError("Ray vertical min_angle [%s] is not a valid float", min_angle_char);
         return false;
       }
     }
@@ -289,7 +265,6 @@ bool parseRayInternal(Ray &ray, tinyxml2::XMLElement* config)
       try {
         ray.vertical_max_angle = strToDouble(max_angle_char);
       } catch(std::runtime_error &) {
-        CONSOLE_BRIDGE_logError("Ray vertical max_angle [%s] is not a valid float", max_angle_char);
         return false;
       }
     }
@@ -326,7 +301,6 @@ VisualSensorSharedPtr parseVisualSensor(tinyxml2::XMLElement *g)
   }
   else
   {
-    CONSOLE_BRIDGE_logError("No know sensor types [camera|ray] defined in <sensor> block");
   }
   return visual_sensor;
 }
@@ -339,7 +313,6 @@ bool parseSensor(Sensor &sensor, tinyxml2::XMLElement* config)
   const char *name_char = config->Attribute("name");
   if (!name_char)
   {
-    CONSOLE_BRIDGE_logError("No name given for the sensor.");
     return false;
   }
   sensor.name = std::string(name_char);
@@ -348,7 +321,6 @@ bool parseSensor(Sensor &sensor, tinyxml2::XMLElement* config)
   const char *parent_link_name_char = config->Attribute("parent_link_name");
   if (!parent_link_name_char)
   {
-    CONSOLE_BRIDGE_logError("No parent_link_name given for the sensor.");
     return false;
   }
   sensor.parent_link_name = std::string(parent_link_name_char);

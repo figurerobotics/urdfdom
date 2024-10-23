@@ -14,7 +14,6 @@ macro(add_urdfdom_library)
     ${urdfdom_headers_link_libs}
   )
   target_link_libraries(${add_urdfdom_library_LIBNAME} PRIVATE
-    ${console_bridge_link_libs}
     tinyxml2::tinyxml2
   )
   if(NOT CMAKE_CXX_STANDARD)
@@ -24,12 +23,6 @@ macro(add_urdfdom_library)
     DEFINE_SYMBOL URDFDOM_EXPORTS
     SOVERSION ${URDF_MAJOR_MINOR_VERSION})
 endmacro()
-
-if(TARGET console_bridge::console_bridge)
-  set(console_bridge_link_libs "console_bridge::console_bridge")
-else()
-  set(console_bridge_link_libs "console_bridge")
-endif()
 
 if(TARGET urdfdom_headers::urdfdom_headers)
   set(urdfdom_headers_link_libs "urdfdom_headers::urdfdom_headers")
